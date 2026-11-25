@@ -1,0 +1,4 @@
+# HapNatt - dépendances (toutes libres)
+PySide6>=6.5        # interface graphique (LGPL v3)
+xyzservices>=2023.10 # catalogue des fonds de carte (BSD 3-Clause), facultatif
+matplotlib>=3.7     # export des courbes en PDF (licence matplotlib, compatible PSF)

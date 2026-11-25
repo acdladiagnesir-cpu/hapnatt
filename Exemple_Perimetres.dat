@@ -1,0 +1,136 @@
+# HapNatt - jeu de données
+
+[SIMULATION]
+cle	valeur
+date_debut	01/01/2029
+pas	1
+pas_unite	an
+date_fin	31/12/2038
+taux_actualisation	0.08
+iterations_max	200
+conserver_convergence	non
+hors_table	derniere_valeur_avec_alerte
+option_tarifs	
+structures_equilibre	
+hausse_max	
+tri_cible	
+structure_tri	
+tresorerie_min	
+
+[FONCTIONS]
+nom	arguments	corps	description
+annuite	montant, taux, duree	facteur = si(taux == 0, duree,\n    (1 - (1 + taux) ^ (-duree)) / taux)\nrésultat = montant / facteur	Remboursement annuel constant d'un emprunt.
+amortissement_lineaire	montant, duree	résultat = montant / duree	Part annuelle d'un investissement amorti sur sa durée.
+tarif_tranches	volume, prix_social, prix_normal, seuil	volume_social = min(volume, seuil)\nvolume_normal = max(volume - seuil, 0 * volume)\nrésultat = volume_social * prix_social\n    + volume_normal * prix_normal	Facture avec une tranche sociale jusqu'au seuil, puis une tranche normale.
+indexation	prix, taux, annees	résultat = prix * (1 + taux) ^ annees	Prix augmenté d'un taux constant chaque année.
+cout_ouvrage	type, taille, taille_reference, cout_reference	exposant = si(type == "usine", 0.7,\n    si(type == "forage", 0.8,\n    si(type == "reservoir", 0.6,\n    si(type == "conduite", 1,\n    si(type == "pompage", 0.65, 1)))))\nrésultat = cout_reference\n    * (taille / taille_reference) ^ exposant	Coût d'un ouvrage selon sa taille, avec économies d'échelle selon le type : "usine", "forage", "reservoir", "conduite", "pompage". Exposants indicatifs, à ajuster.
+
+[REFERENCES]
+dimension	unite
+Temps	an
+Longueur	m
+Surface	m2
+Volume	m3
+Masse	kg
+Puissance	kW
+Énergie	kWh
+Pression	Pa
+Température	K
+Monnaie	FCFA
+
+[CONVERSIONS]
+unite	reference	facteur
+
+[STRUCTURES]
+id	nom	type	x	y	missions
+societe_de_patrimoine	Société de patrimoine	Société de patrimoine	170	120	Investir | Mettre les infrastructures à disposition
+exploitant	Exploitant	Exploitant	520	320	Produire et distribuer | Vendre le service
+usagers	Usagers	Usager	170	520	Consommer le service
+
+[FLUX]
+id	nom	de	vers	structure	nature	effet	compte
+mise_a_disposition[exploitant]	Mise à disposition	societe_de_patrimoine	exploitant	exploitant	Physique	Capacité	Résultat
+recette[exploitant]	Recette	usagers	exploitant	exploitant	Financier	Capacité	Résultat
+redevance[societe_de_patrimoine]	Redevance	exploitant	societe_de_patrimoine	societe_de_patrimoine	Financier	Capacité	Résultat
+
+[CAPACITES]
+id	tresorerie_minimale	couverture	taux	duree	besoin
+
+[PAIEMENTS]
+id	recouvrement	rattrapage	abandon	moratoire_debut	moratoire_fin	part_suspendue	reprise_pas	taux_moratoire
+recette[exploitant]	0.95	1	0			1	1	0
+
+[CHARGES]
+id	nom	structure	compte
+investissement[societe_de_patrimoine]	Investissement	societe_de_patrimoine	Investissement
+exploitation[exploitant]	Exploitation	exploitant	Résultat
+
+[POSTES]
+id	nom	structure	categorie
+capital_social[societe_de_patrimoine]	Capital social	societe_de_patrimoine	Capital
+tresorerie_depart[societe_de_patrimoine]	Tresorerie depart	societe_de_patrimoine	Trésorerie initiale
+ouvrages[societe_de_patrimoine]	Ouvrages	societe_de_patrimoine	Actif
+
+[PARAMETRES]
+id	mode	expression	unite	valeur_initiale	convergence	suivi	variable_1_table	lecture_table	conversion
+mise_a_disposition[exploitant]	formule	capacite_installee[societe_de_patrimoine, p]	m3/an	0	1e-3	non	annee	paliers	non
+capacite_installee[societe_de_patrimoine,p]	formule	1000000 [m3/an]	m3/an	1000000	1e-3	non	annee	paliers	non
+recette[exploitant]	formule	volume_vendu[exploitant, p] * tarif[exploitant]	FCFA	0	1e-3	non	annee	paliers	non
+volume_vendu[exploitant,p]	formule	min(demande[usagers, p], capacite_installee[societe_de_patrimoine, p] * rendement[exploitant])	m3/an	0	1e-3	non	annee	paliers	non
+tarif[exploitant]	table		FCFA/m3	500	1e-3	non	annee	interpolation	non
+redevance[societe_de_patrimoine]	formule	volume_vendu[exploitant, p] * tarif[exploitant] * part_redevance[societe_de_patrimoine]	FCFA	0	1e-3	non	annee	paliers	non
+part_redevance[societe_de_patrimoine]	formule	0.24	sans unité	0.24	1e-3	non	annee	paliers	non
+investissement[societe_de_patrimoine]	formule	cout_investissement[societe_de_patrimoine, p]	FCFA	0	1e-3	non	annee	paliers	non
+cout_investissement[societe_de_patrimoine,p]	formule	0 [FCFA]	FCFA	0	1e-3	non	annee	paliers	non
+exploitation[exploitant]	formule	volume_vendu[exploitant, p] * cout_unitaire[exploitant, p]	FCFA	0	1e-3	non	annee	paliers	non
+cout_unitaire[exploitant,p]	formule	indexation(150 [FCFA/m3], 0.02, t_an)	FCFA/m3	150	1e-3	non	annee	paliers	non
+demande[usagers,p]	formule	demande_initiale[usagers, p] * (1 + croissance[usagers]) ^ t_an	m3/an	0	1e-3	non	annee	paliers	non
+rendement[exploitant]	formule	0.8	sans unité	0.8	1e-3	non	annee	paliers	non
+demande_initiale[usagers,p]	formule	500000 [m3/an]	m3/an	500000	1e-3	non	annee	paliers	non
+croissance[usagers]	formule	0.03	sans unité	0.03	1e-3	non	annee	paliers	non
+capital_social[societe_de_patrimoine]	formule	1000000000	FCFA	0	1e-3	non	annee	paliers	non
+tresorerie_depart[societe_de_patrimoine]	formule	1000000000	FCFA	0	1e-3	non	annee	paliers	non
+ouvrages[societe_de_patrimoine]	formule	lag(ouvrages[societe_de_patrimoine]) + investissement[societe_de_patrimoine]	FCFA	0	1e-3	non	annee	paliers	non
+
+[PERIMETRES]
+perimetre	Région	Zone	X	Y
+Dakar	Dakar	Triangle	-17.4467	14.6928
+Thiès	Thiès	Triangle	-16.926	14.791
+Mbour	Thiès	Petite Côte	-16.9667	14.4167
+
+[VALEURS_PERIMETRE]
+id	perimetre	mode	expression	valeur_initiale
+capacite_installee[societe_de_patrimoine,p]	dakar	table		1400000
+cout_investissement[societe_de_patrimoine,p]	dakar	table		
+cout_investissement[societe_de_patrimoine,p]	thies	table		
+cout_unitaire[exploitant,p]	mbour	formule	indexation(210 [FCFA/m3], 0.02, t_an)	
+demande_initiale[usagers,p]	dakar	formule	900000 [m3/an]	900000
+demande_initiale[usagers,p]	mbour	formule	250000 [m3/an]	250000
+
+[TABLES_PERIMETRE]
+id	perimetre	x	y
+capacite_installee[societe_de_patrimoine,p]	dakar	2029.0	1400000.0
+capacite_installee[societe_de_patrimoine,p]	dakar	2034.0	1800000.0
+capacite_installee[societe_de_patrimoine,p]	dakar	2038.0	1800000.0
+cout_investissement[societe_de_patrimoine,p]	dakar	2029.0	600000000.0
+cout_investissement[societe_de_patrimoine,p]	dakar	2030.0	0.0
+cout_investissement[societe_de_patrimoine,p]	dakar	2034.0	400000000.0
+cout_investissement[societe_de_patrimoine,p]	dakar	2035.0	0.0
+cout_investissement[societe_de_patrimoine,p]	dakar	2038.0	0.0
+cout_investissement[societe_de_patrimoine,p]	thies	2029.0	300000000.0
+cout_investissement[societe_de_patrimoine,p]	thies	2030.0	0.0
+cout_investissement[societe_de_patrimoine,p]	thies	2038.0	0.0
+
+[TARIFS_OPTIMISABLES]
+id	tarif_max
+tarif[exploitant]	
+
+[POST_TRAITEMENT]
+id	nom	structure	expression	unite
+demande_triangle[projet]	Demande Triangle	projet	somme_p(demande[usagers, p], "Zone:Triangle")	m3/an
+demande_totale[projet]	Demande totale	projet	somme_p(demande[usagers, p])	m3/an
+
+[TABLES]
+variable_2	variable_1	valeur
+tarif[exploitant]	2029.0	500.0
+tarif[exploitant]	2038.0	590.0

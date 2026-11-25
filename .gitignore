@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+cache_carte/
+*.dat.bak
+# Résultats et exports produits par le logiciel
+Resultat*.dat
+*.pdf
+*.png
+*.csv
+# Ne jamais publier de données réelles : seuls les exemples fictifs sont suivis
+*.dat
+!Exemple_Simulation.dat
+!Exemple_Perimetres.dat
+build/
+dist/
+*.spec
