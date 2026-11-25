@@ -1,11 +1,11 @@
 # HapNatt - construction automatique de l'exécutable Windows.
-# Se lance à chaque version publiée (étiquette v1.0.0, v1.1.0...) ou à la main
-# depuis l'onglet « Actions ». L'archive .zip est jointe à la version.
+# Se lance à chaque version publiée (page « Releases », étiquette v1.0.0...) ou
+# à la main depuis l'onglet « Actions ». L'archive .zip est jointe à la version.
 name: Executable Windows
 
 on:
-  push:
-    tags: ["v*"]
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
