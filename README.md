@@ -7,7 +7,7 @@ Logiciel libre de modélisation technico-financière des partenariats public-pri
 
 **Le nom.** *Hap*, en sérère, veut dire estimer, évaluer ; *natt*, en wolof, veut dire mesurer. HapNatt évalue et mesure, avant de décider.
 
-Copyright © 2026 A. C. Diagne. Distribué sous licence **GNU GPL v3 ou ultérieure** (voir [LICENSE](LICENSE)).
+Copyright © 2026 Aminata Collé Diagne (A. C. Diagne). Distribué sous licence **GNU GPL v3 ou ultérieure** (voir [LICENSE](LICENSE)).
 
 ---
 
@@ -73,6 +73,12 @@ Les signalements de bugs, propositions et contributions sont bienvenus : voir [C
 ## Formation et accompagnement
 
 Formations à la modélisation PPP, modèles sectoriels prêts à l'emploi, études et accompagnement : écrire à **diagne.amicolle@gmail.com**.
+
+## Propriété / Ownership
+
+HapNatt appartient à son autrice, **Aminata Collé Diagne** (A. C. Diagne), ingénieure à Dakar (Sénégal), titulaire des droits d'auteur sur l'ensemble du code, de la documentation et des exemples. Aucun code, contenu ou jeu de données de tiers n'est inclus ; les dépendances sont des bibliothèques libres installées séparément.
+
+*HapNatt is owned by its author, **Aminata Collé Diagne** (A. C. Diagne), engineer based in Dakar, Senegal, who holds the copyright on all code, documentation and examples. No third-party code, content or data is included; dependencies are open-source libraries installed separately. Contributors sign a contributor agreement (see CONTRIBUTING.md).*
 
 ## Contact
 
