@@ -54,6 +54,7 @@ Les réglages (fichier ouvert au démarrage, langue, fond de carte) sont des con
 | `Exemple_Simulation.dat` | Exemple : concession d'eau (données fictives) |
 | `Exemple_Perimetres.dat` | Exemple : même concession découpée en trois périmètres (données fictives) |
 | `README_Formules.md` | Référence des formules et des calculs du moteur |
+| `docs/ARCHITECTURE.md` | Documentation technique en anglais : installation, construction, organisation du code, moteur, format des fichiers |
 | `construire_exe.py` | Construction de l'exécutable Windows (F5 dans IDLE) ; fait aussi automatiquement sur GitHub à chaque version |
 
 Toutes les données des exemples sont **fictives**.
@@ -106,6 +107,8 @@ ODD 6 (eau propre et assainissement), ODD 7 (énergie), ODD 9 (infrastructures),
 **Install:** on Windows, download `HapNatt-<version>-windows.zip` from the *Releases* page, unzip it and run `HapNatt.exe` (models are kept in *Documents/HapNatt*). From source: `pip install -r requirements.txt` (Python 3.10+). **Run:** open `ppp_interface.py` in IDLE and press F5, or `python ppp_interface.py`. Set `LANGUE_INTERFACE = "en"` at the top of the file for English.
 
 **Contact:** diagne.amicolle@gmail.com
+
+**Technical documentation (English):** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) – install, build, code organisation, simulation engine, file format.
 
 **Privacy:** the software runs locally and collects no personal data; only map tiles are downloaded from OpenStreetMap.
 
